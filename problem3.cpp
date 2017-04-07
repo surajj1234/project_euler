@@ -42,7 +42,7 @@ bool isPrime(long number)
 {
     bool result = true;
     long max = sqrt(number);
-    for (long i = 2; i < max; i++)
+    for (long i = 2; i <= max; i++)
     {
         if (number % i == 0)
         {

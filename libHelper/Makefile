@@ -55,7 +55,7 @@ $(OBJDIR)/%.o : $(SRCDIR)/%.cpp $(INCLUDES)
 
 clean: 
 	@echo Cleaning $(TARGET) "..."
-	#-@rm -f $(OUTDIR)/$(TARGET)
+	-@rm -f $(OUTDIR)/$(TARGET)
 	-@rm -f $(OUTLIBDIR)/$(TARGET)
 	-@rm -f $(OBJDIR)/*.o
 	-@rm -rf $(OBJDIR)

@@ -1,6 +1,7 @@
 #include "BigNum.h"
 #include <iostream>
 #include <stdexcept>
+#include <algorithm>
 
 BigNum::BigNum(void)
 {
@@ -14,6 +15,7 @@ BigNum::BigNum(std::string num)
         if (num[i] < '0' || num[i] > '9')
             throw std::invalid_argument("received non-numeric digit");
     }
+    num = eraseLeadingZeros(num);
     number = num;
 }
 
@@ -29,16 +31,63 @@ std::ostream & operator << (std::ostream & out, const BigNum & val)
     return out;
 }
 
-BigNum & BigNum::operator + (const BigNum & val)
+BigNum operator + (const BigNum & a, const BigNum & b)
 {
-    number = addStrings(number, val.number);
-    return *this;
+    BigNum sum;
+    sum.number = BigNum::addStrings(a.number, b.number);
+    return sum;
+}
+
+BigNum operator * (const BigNum & a, const BigNum & b)
+{
+    BigNum product;
+    product.number = BigNum::multiplyStrings(a.number, b.number);
+    return product;
 }
 
 BigNum & BigNum::operator += (const BigNum & val)
 {
     number = addStrings(number, val.number);
     return *this;
+}
+
+BigNum & BigNum::operator *= (const BigNum & val)
+{
+    number = multiplyStrings(number, val.number);
+    return *this;
+}
+
+std::string BigNum::multiplyStrings(std::string s1, std::string s2)
+{
+    std::string product = std::string(s1.size() + s2.size(), '0');
+
+    for (int i = s1.size() - 1; i >= 0; i--)
+    {
+        int carry = 0;
+        for (int j = s2.size() - 1; j >= 0; j--)
+        {
+            int digit1 = s1[i] - '0';
+            int digit2 = s2[j] - '0';
+            int prev = product[i + j + 1] - '0';
+
+            int prod = prev + (digit1 * digit2) + carry;
+            carry = prod / 10;
+            prod = prod % 10;
+            product[i + j + 1] = '0' + prod;
+        }
+        int k = i;
+        while(carry)
+        {
+            int prev = product[k] - '0';
+            int sum = prev + carry;
+            carry = sum / 10;
+            sum = sum % 10;
+            product[k] = '0' + sum;
+            k--;
+        }
+    }
+    product = eraseLeadingZeros(product);
+    return product;
 }
 
 std::string BigNum::addStrings(std::string s1, std::string s2)
@@ -79,6 +128,11 @@ std::string BigNum::addStrings(std::string s1, std::string s2)
     if (carry)
         result.insert(0, 1, '0' + carry);
     return result;
+}
+
+std::string BigNum::eraseLeadingZeros(std::string s)
+{
+    return s.erase(0, std::min(s.find_first_not_of('0'), s.size() - 1));
 }
 
 std::string BigNum::getString(void)

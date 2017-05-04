@@ -5,7 +5,8 @@
 #include <iostream>
 
 // Can only handle positive integers
-// Supports addition, multiplication only
+// Supports addition, multiplication
+// Exponent is limited to 64-bits 
 
 class BigNum
 {
@@ -18,6 +19,7 @@ class BigNum
         BigNum(void);
         BigNum(std::string num);
         ~BigNum(void);
+        BigNum exp(unsigned long exp);
         BigNum & operator = (const BigNum & val);
         BigNum & operator += (const BigNum & val);
         BigNum & operator *= (const BigNum & val);

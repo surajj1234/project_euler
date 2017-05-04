@@ -19,6 +19,23 @@ BigNum::BigNum(std::string num)
     number = num;
 }
 
+BigNum BigNum::exp(unsigned long exp)
+{
+    BigNum base = BigNum(number);
+    BigNum prod = BigNum("1");
+
+    while (exp)
+    {
+        if (exp & 0x01)
+        {
+            prod *= base;
+        }
+        base *= base;
+        exp >>= 1;
+    }
+    return prod;
+}
+
 BigNum & BigNum::operator=(const BigNum & val)
 {
     number = val.number;
